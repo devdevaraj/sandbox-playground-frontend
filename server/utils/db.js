@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 class JSONDB {
  constructor(name) {
   this.dbname = name;
-  this.dbpath = `../db/${name}.json`
+  this.dbpath = `/db/${name}.json`
   if (!fs.existsSync(this.dbpath)) {
    fs.writeFileSync(this.dbpath, "[]");
   }

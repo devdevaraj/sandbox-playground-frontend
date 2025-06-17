@@ -1,40 +1,27 @@
 import http from "http";
 import path from "path";
 import cookieParser from "cookie-parser";
-import { WebSocketServer } from 'ws';
-import express from "express";
-import dotenv from "dotenv";
+// import { WebSocketServer } from 'ws';
 import cors from "cors";
+import express from "express";
+// import morgan from "morgan";
+import dotenv from "dotenv";
 import router from "./router.js";
+
+dotenv.config();
 // import handleProxyConnection from "./ws-controller.js";
 // import getDestination from "./utils/get-destination.js";
 
-dotenv.config();
-
 const app = express();
 const server = http.createServer(app);
-const wss = new WebSocketServer({ noServer: true });
+// const wss = new WebSocketServer({ noServer: true });
 
+// app.use(morgan("dev"));
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.static("./dist"));
 app.use("/api/v1", router);
-
-
-// server.on('upgrade', async (request, socket, head) => {
-//  const { url } = request;
-
-//  if (!getDestination(url)) {
-//   socket.write('HTTP/1.1 404 Not Found\r\n\r\n');
-//   socket.destroy();
-//   return;
-//  }
-
-//  wss.handleUpgrade(request, socket, head, async (ws) => {
-//   handleProxyConnection(ws, url);
-//  });
-// });
 
 app.get('*path', (_, res) => res.sendFile(path.resolve('./dist/index.html')));
 

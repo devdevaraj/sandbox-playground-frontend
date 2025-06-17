@@ -73,8 +73,9 @@ export async function create(req, res) {
    // populate(pg._id, pg.ip);
    return res.status(200).json({ msg: "Playground already exists", details: pg });
   }
+
   const uniqueId = uuidv4().replace(/\D/g, '').slice(0, 12);
-  const response = await axios.post("http://localhost:8080/bridges/" + (pg.pgname ?? "2vmpg"), {
+  const response = await axios.post(`${process.env.BENDER_URL}/bridges/` + (pg.pgname ?? "2vmpg"), {
    id: `${pg._id}`,
    name: `pg${uniqueId}`,
    image: `repo.synnefo.solutions/devaraj/2vmpg`,
@@ -89,7 +90,7 @@ export async function create(req, res) {
   // populate(result.id, response.data.ip);
   // await waitForPort(response.data.ip, 8080);
   // await axios.get(`http://${response.data.ip}:8080/wait-for-vms`)
-  await axios.post("http://localhost:8082/wait-for-vms", { ip: response.data.ip })
+  await axios.post(`${process.env.VITE_CONDUCTOR_URL}/wait-for-vms`, { ip: response.data.ip })
   res.status(201).json({
    msg: "Playground created", details: {
     status: "active",
@@ -106,7 +107,7 @@ export async function read(req, res) {
  try {
   const uid = req.user.id;
   const nos = pgdb.readAll();
-  const response = await axios.get("http://localhost:8080/bridges");
+  const response = await axios.get(`${process.env.BENDER_URL}/bridges`);
   const result = nos.map(entry => {
    const match = response.data.find(e => e.name.endsWith(entry.post_name));
    return { ...entry, instance: match };
@@ -166,7 +167,7 @@ export async function checkTest(req, res) {
   }
   // const url = `http://${ip}:8080/examiner/test/${vm}/${test}?args=${args}`;
   // const result = await axios.post(url);
-  const result = await axios.post("http://localhost:8082/examiner", { ip, vm, test, args })
+  const result = await axios.post(`${process.env.VITE_CONDUCTOR_URL}/examiner`, { ip, vm, test, args })
   if (result.data.success) {
    res.status(200).json({ msg: "Test complete", isPass: result.data.success });
    return;

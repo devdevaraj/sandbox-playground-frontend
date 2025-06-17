@@ -25,7 +25,7 @@ export async function openPort(req, res) {
    short_id: short_id
   }
 
-  const response = await axios.post(`http://127.0.0.1:8082/open-port`, payload);
+  const response = await axios.post(`${process.env.VITE_CONDUCTOR_URL}/open-port`, payload);
   if (response.status !== 200) {
    return res.status(500).json({ msg: "Failed to open port" });
   }
@@ -53,7 +53,7 @@ export async function closePort(req, res) {
    openport: [{ subdomain: openport.subdomain }]
   };
 
-  const DNSresponse = await axios.patch(`http://127.0.0.1:8082/close-port/${openport.short_id}`, payload);
+  const DNSresponse = await axios.patch(`${process.env.VITE_CONDUCTOR_URL}/close-port/${openport.short_id}`, payload);
   if (DNSresponse.status !== 200) {
    return res.status(500).json({ msg: "Failed to close port" });
   }
@@ -88,7 +88,7 @@ export async function pgPortClose(pg_id) {
    domain: domain,
    openport: portList
   };
-  const DNSresponse = await axios.patch(`http://127.0.0.1:8082/remove-container`, payload);
+  const DNSresponse = await axios.patch(`${process.env.VITE_CONDUCTOR_URL}/remove-container`, payload);
   if (DNSresponse.status !== 200) throw new Error("DNS Update failed");
   openports.deleteByField("pg_id", pg_id);
  } catch (error) {

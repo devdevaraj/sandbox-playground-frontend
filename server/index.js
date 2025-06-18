@@ -26,6 +26,8 @@ app.use("/api/v1", router);
 app.get('*path', (_, res) => res.sendFile(path.resolve('./dist/index.html')));
 
 server.listen(process.env.PORT, err => {
+ console.log(process.env.VITE_GITHUB_CLIENT_ID);
+ console.log(process.env.GITHUB_CLIENT_SECRET);
  if (err) return console.log("Error starting server", err);
  console.log(`Server started on port: ${process.env.PORT}`);
 });

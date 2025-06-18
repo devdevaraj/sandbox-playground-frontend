@@ -1,7 +1,6 @@
 import http from "http";
 import path from "path";
 import cookieParser from "cookie-parser";
-// import { WebSocketServer } from 'ws';
 import cors from "cors";
 import express from "express";
 // import morgan from "morgan";
@@ -14,7 +13,6 @@ dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
-// const wss = new WebSocketServer({ noServer: true });
 
 // app.use(morgan("dev"));
 app.use(cors());
@@ -26,8 +24,6 @@ app.use("/api/v1", router);
 app.get('*path', (_, res) => res.sendFile(path.resolve('./dist/index.html')));
 
 server.listen(process.env.PORT, err => {
- console.log(process.env.VITE_GITHUB_CLIENT_ID);
- console.log(process.env.GITHUB_CLIENT_SECRET);
  if (err) return console.log("Error starting server", err);
  console.log(`Server started on port: ${process.env.PORT}`);
 });

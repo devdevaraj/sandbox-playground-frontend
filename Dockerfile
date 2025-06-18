@@ -8,6 +8,8 @@ RUN npm install
 
 COPY . .
 
+COPY ./.env .
+
 # RUN mkdir -p /db
 
 RUN npm run build

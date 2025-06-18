@@ -20,4 +20,4 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - /home/john/db:/db
+      - /var/db:/db

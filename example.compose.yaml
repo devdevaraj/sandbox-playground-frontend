@@ -13,6 +13,7 @@ services:
       PORT_DOMAIN: lab.devaraj.me
       BENDER_URL: http://bender.lab.devaraj.me
       VITE_CONDUCTOR_URL: http://conductor.lab.devaraj.me
+      VITE_WEBSOCKET: http://conductor.lab.devaraj.me
       PDNS_KEY: a7eadf75278dd026e54c24d3aeff992cd5a8fc19
     container_name: synnefo-lab
     restart: unless-stopped

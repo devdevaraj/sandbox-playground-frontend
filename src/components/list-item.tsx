@@ -12,8 +12,8 @@ import { Badge } from "../ui/badge";
 
 export default function ListItem({ template }: { template: TemplateType }) {
  const navigate = useNavigate();
- const generate = async (index: string, pgname: string) => {
-  const { id, status } = await genIDClient(`ubuntupg${index}`, pgname);
+ const generate = async (index: string, pgname: string, playground: string) => {
+  const { id, status } = await genIDClient(`ubuntupg${index}`, pgname, playground);
   if (status) {
    navigate(`/playground/${id}?num=${template.numofvms}`);
   }
@@ -58,7 +58,7 @@ export default function ListItem({ template }: { template: TemplateType }) {
    </CardContent>
    <CardFooter>
     <Button
-     onClick={() => generate(template.id, template.pgname)}
+     onClick={() => generate(template.id, template.pgname, template.playground)}
      className="w-full"
     >
      Launch Playground

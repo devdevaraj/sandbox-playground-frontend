@@ -1,8 +1,8 @@
 import axios, { AxiosError } from "axios";
 
-export async function genIDClient(pg: string, pgname: string) {
+export async function genIDClient(pg: string, pgname: string, playground: string) {
  try {
-  const { data: { id } } = await axios.get(`/api/v1/generate-id/${pg}/${pgname}`, {
+  const { data: { id } } = await axios.get(`/api/v1/generate-id/${pg}/${pgname}/${playground}`, {
    headers: {
     Authorization: `Bearer ${localStorage.getItem("token")}`
    }

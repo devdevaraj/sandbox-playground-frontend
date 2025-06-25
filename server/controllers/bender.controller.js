@@ -23,11 +23,18 @@ export async function checkPG(req, res) {
 export async function generateID(req, res) {
  try {
   const uid = req.user.id;
-  const { type, pgname } = req.params;
+  const { type, pgname, playground } = req.params;
   const pg = pgdb.find({ userid: uid, type });
   let id = pg?._id;
   if (!pg) {
-   id = pgdb.write({ userid: req.user.id, type, pgname, status: "inactive", start: Date.now(), lastActive: null }).id;
+   id = pgdb.write({
+    userid: req.user.id,
+    type, pgname,
+    status: "inactive",
+    start: Date.now(),
+    lastActive: null,
+    playground
+   }).id;
   }
   res.status(201).json({ msg: "Playground created", id });
  } catch (error) {
@@ -78,7 +85,8 @@ export async function create(req, res) {
   const response = await axios.post(`${process.env.BENDER_URL}/bridges/` + (pg.pgname ?? "2vmpg"), {
    id: `${pg._id}`,
    name: `pg${uniqueId}`,
-   image: `repo.synnefo.solutions/devaraj/2vmpg`,
+   image: `repo.synnefo.solutions/devaraj/playground`,
+   playground: `${pg.playground}`,
   });
   const result = pgdb.update(id, {
    ...response.data,

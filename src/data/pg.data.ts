@@ -1,8 +1,11 @@
-export const templates = [
+import TemplateType from "../types/pg";
+
+export const templates: TemplateType[] = [
  {
   id: "1",
   name: "2 VM playground",
   pgname: "2vmpg",
+  playground: "ubuntu2404n2",
   numofvms: 2,
   description: "A comprehensive playground with 2 ubuntu 24.04 virtual machines",
   image: "/img/2vm-pg-img.jpg",
@@ -15,10 +18,11 @@ export const templates = [
  },
  {
   id: "2",
-  name: "4 VM playground",
+  name: "Docker playground",
+  playground: "ubuntu2404n2-docker",
   pgname: "4vmpg",
-  numofvms: 4,
-  description: "A comprehensive playground with 4 ubuntu 24.04 virtual machines",
+  numofvms: 2,
+  description: "A comprehensive playground with 4 ubuntu 24.04 virtual machines with docker",
   image:
   "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80",
   tags: ["Ubuntu", "Docker", "VMs"],
@@ -32,6 +36,7 @@ export const templates = [
   id: "3",
   name: "5 VM playground",
   pgname: "5vmpg",
+  playground: "ubuntu2404n2-docker",
   numofvms: 5,
   description: "A comprehensive playground with 5 ubuntu 24.04 virtual machines",
   image:
@@ -47,6 +52,7 @@ export const templates = [
   id: "4",
   name: "2 VM playground",
   pgname: "2almavms",
+  playground: "ubuntu2404n2-docker",
   numofvms: 2,
   description: "A comprehensive playground with 2 Almalinux OS 9 virtual machines",
   image:

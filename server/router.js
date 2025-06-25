@@ -24,7 +24,7 @@ router.route("/logout").post(user.logout);
 router.route("/verify-token/:id").post(auth, admin.verifyToken);
 
 // Bender controller
-router.route("/generate-id/:type/:pgname").get(auth, bender.generateID);
+router.route("/generate-id/:type/:pgname/:playground").get(auth, bender.generateID);
 router.route("/pg-poll/:id").get(auth, bender.poll);
 router.route("/playground/:id").post(auth, bender.create);
 router.route("/playground").get(auth, bender.read);

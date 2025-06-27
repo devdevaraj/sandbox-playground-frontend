@@ -1,11 +1,16 @@
-import { memo, useState } from "react";
+import { memo, useContext, useEffect, useState } from "react";
 import sessions from "../../data/docker/sessions";
 import Session1 from "./session-1";
+import { PlaygroundContext } from "../../pages/playground";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
-function Sessions({ vmID }: { vmID: number }) {
+function Sessions() {
  // const vm = `vm${vmID + 1}`;
- // const { id } = useParams();
- const [page, setpage] = useState(0);
+ const navigate = useNavigate();
+ const vmID = useContext(PlaygroundContext);
+ const { id, session } = useParams();
+ const [query] = useSearchParams();
+ const [page, setpage] = useState(Number(session?.toString() ?? "0"));
 
  // const check = async (test: string, ...args: string[]) => {
  //  if (!id) return toast.error("Playground ID not found");
@@ -22,6 +27,10 @@ function Sessions({ vmID }: { vmID: number }) {
   if (page <= 0) return;
   setpage(p => --p);
  }
+
+ useEffect(() => {
+  navigate(`/playground/${id}/${page}?num=${query.get("num")}`);
+ }, [page]);
 
  return (
   <main className="h-full w-full overflow-y-auto sesstion-carrier">

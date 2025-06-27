@@ -15,7 +15,7 @@ export default function ListItem({ template }: { template: TemplateType }) {
  const generate = async (index: string, pgname: string, playground: string) => {
   const { id, status } = await genIDClient(`ubuntupg${index}`, pgname, playground);
   if (status) {
-   navigate(`/playground/${id}?num=${template.numofvms}`);
+   navigate(`/playground/${id}/0?num=${template.numofvms}`);
   }
  }
  return (

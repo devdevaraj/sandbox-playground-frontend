@@ -7,7 +7,6 @@ import GitHubCallback from "./components/callback";
 import DarkButton from "./components/dark-button";
 import AdminAuth from "./middlewares/admin-auth";
 import AdminLogin from "./pages/admin-login";
-import Playground from "./pages/playground";
 import Loading from "./components/loading";
 import Dashboard from "./pages/dashboard";
 import VerifyKey from "./pages/verify-key";
@@ -16,6 +15,8 @@ import Login from "./pages/login";
 import Admin from "./pages/admin";
 import Home from "./pages/home";
 import './App.css';
+import PlaygroundWrapper from "./components/wrappers/playground-wrapper";
+import Sessions from "./components/sessions/sessions";
 
 export const origin = import.meta.env.DEV ? "http://localhost:3000" : location.origin;
 // export const origin = false ? "http://localhost:3000" : location.origin;
@@ -43,7 +44,11 @@ function App() {
       <Route element={<Auth />}>
        <Route path="/verify" element={<VerifyKey />} />
        <Route path="/dashboard" element={<Dashboard />} />
-       <Route path="/playground/:id" element={<Playground />} />
+
+       <Route path="/playground/:id" element={<PlaygroundWrapper />}>
+        <Route path=":session" element={<Sessions />} />
+       </Route>
+
       </Route>
       <Route path="/admin">
        <Route path="login" element={<AdminLogin />} />

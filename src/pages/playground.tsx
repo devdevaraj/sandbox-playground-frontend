@@ -1,6 +1,6 @@
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Server, Clock, Power } from "lucide-react";
-import { ChangeEvent, memo, useEffect, useRef, useState } from "react";
+import { ChangeEvent, createContext, memo, ReactNode, useEffect, useRef, useState } from "react";
 import { createPG, pollPG, removePG } from "../utils/api-client";
 import TerminalComponent from "../components/terminal"
 import formatTime from "../utils/format-time";
@@ -9,13 +9,14 @@ import Loading from "../components/loading";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { Card } from "../ui/card";
-import Sessions from "../components/sessions/sessions";
 import ExposePort from "../components/expose-port";
 import fonts from "../data/fonts.data";
 import FontType from "../types/font";
 import LocalStore from "../utils/local-store";
 
-function Playground() {
+export const PlaygroundContext = createContext<number>(null!);
+
+function Playground({ children }: { children: ReactNode }) {
  const navigate = useNavigate();
  const updateStatus = useRef<() => void | null>(null!);
  const [timeRemaining, setTimeRemaining] = useState<number>(60 * 60);
@@ -151,129 +152,131 @@ function Playground() {
  }
 
  return (
-  <main className="flex flex-col h-screen bg-background">
-   <div className="flex justify-between items-center p-4 pr-16 border-b">
-    <div>
-     <h1 className="text-2xl font-bold">{templateName}</h1>
-     <p className="text-muted-foreground">{templateDescription}</p>
-    </div>
-    <div className="flex items-center gap-3">
-     {/* Timer display */}
-     {(running || timeRemaining < 60 * 60) && (
-      <div className="flex items-center gap-1 text-sm">
-       <Clock className="h-4 w-4 text-muted-foreground" />
-       <span
-        className={`font-mono ${timeRemaining < 300 ? "text-red-500 font-bold" : ""}`}
-       >
-        {formatTime(timeRemaining)}
-       </span>
-      </div>
-     )}
-
-     <Badge
-      variant={running ? "default" : "outline"}
-      className="flex gap-1 items-center"
-     >
-      {running ? (
-       <>
-        <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
-        Running
-       </>
-      ) : (
-       <>Stopped</>
-      )}
-     </Badge>
-     <Button
-      variant="outline"
-      size="sm"
-      onClick={remove}
-      // onClick={handleRestartVMs}
-      className="gap-1"
-     >
-      <Power className="h-4 w-4" /> Stop VMs
-     </Button>
-    </div>
-   </div>
-
-   <div className="flex flex-1 p-4 pg-cards-container overflow-hidden">
-    <Card className="h-full flex flex-col w-1/4 left-pane p-2">
-     {pg && <Sessions vmID={terminal} />}
-    </Card>
-    <div className="flex items-center justify-center h-full w-4 cursor-col-resize resizer">
-     <section className="flex h-6 w-3 bg-white rounded-xs py-1 px-0.5 gap-0.5">
-      <aside className="bg-slate-500 h-full grow"></aside>
-      <aside className="bg-slate-500 h-full grow"></aside>
-      <aside className="bg-slate-500 h-full grow"></aside>
-     </section>
-    </div>
-    <Card className="h-full flex flex-col flex-1">
-     <div className="flex justify-between items-center px-4 py-2 border-b bg-muted/50">
-      <Tabs
-       className="w-full"
-      >
-       <div className="flex justify-between items-center w-full">
-        <TabsList>
-         {(new Array(vms)).fill(1).map((_, i) => (
-          <button
-           key={i}
-           onClick={() => setTerminal(i)}
-           data-state={(terminal === i) ? "active" : ""}
-           className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow">
-           <Server className="h-4 w-4 mr-1" /> VM0{i + 1}
-          </button>
-         ))}
-        </TabsList>
-        <div className="flex justify-between items-center gap-2">
-         <div className="inline-flex h-9 items-center justify-center rounded-lg bg-muted pe-4 text-muted-foreground">
-          <select
-           onChange={fontSelectHandler}
-           className="inline-flex items-center justify-center whitespace-nowrap rounded-md ps-4 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow"
-           name="select-font"
-           id="select-font"
-           defaultValue={font.font}
-          >
-           {fonts.map((e, i) => (
-            <option
-             className="bg-background"
-             key={i}
-             value={e.font}
-            >
-             {e.name}
-            </option>
-           ))}
-          </select>
-         </div>
-          <ExposePort vmID={`vm${terminal + 1}`} />
-        </div>
-       </div>
-      </Tabs>
+  <PlaygroundContext.Provider value={terminal}>
+   <main className="flex flex-col h-screen bg-background">
+    <div className="flex justify-between items-center p-4 pr-16 border-b">
+     <div>
+      <h1 className="text-2xl font-bold">{templateName}</h1>
+      <p className="text-muted-foreground">{templateDescription}</p>
      </div>
-     {pg ? (timeRemaining > 0 ? <div className="flex-1">
-      <Tabs className="h-full relative">
-       {/* VM01 Terminal */}
-       {(new Array(vms).fill(1).map((_, i) => (
-        <section
-         key={i}
-         className="w-full h-full m-0 p-2 absolute bg-black"
-         style={{ zIndex: (terminal === i) ? 1 : -1 }}
+     <div className="flex items-center gap-3">
+      {/* Timer display */}
+      {(running || timeRemaining < 60 * 60) && (
+       <div className="flex items-center gap-1 text-sm">
+        <Clock className="h-4 w-4 text-muted-foreground" />
+        <span
+         className={`font-mono ${timeRemaining < 300 ? "text-red-500 font-bold" : ""}`}
         >
-         <TerminalComponent
-          updateStatus={updateStatus.current}
-          vmid={`vm${i + 1}`}
-          pg={id!}
-          font={font}
-         />
-        </section>
-       )))}
-      </Tabs>
-     </div> : <main className="w-full h-full flex items-center justify-center">
-      <h1 className="text-2xl font-bold text-white">Session terminated</h1>
-     </main>) : (msg ? <main className="w-full h-full flex items-center justify-center">
-      <h1 className="text-2xl font-bold text-white">{msg}</h1>
-     </main> : <Loading />)}
-    </Card>
-   </div>
-  </main>
+         {formatTime(timeRemaining)}
+        </span>
+       </div>
+      )}
+
+      <Badge
+       variant={running ? "default" : "outline"}
+       className="flex gap-1 items-center"
+      >
+       {running ? (
+        <>
+         <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
+         Running
+        </>
+       ) : (
+        <>Stopped</>
+       )}
+      </Badge>
+      <Button
+       variant="outline"
+       size="sm"
+       onClick={remove}
+       // onClick={handleRestartVMs}
+       className="gap-1"
+      >
+       <Power className="h-4 w-4" /> Stop VMs
+      </Button>
+     </div>
+    </div>
+
+    <div className="flex flex-1 p-4 pg-cards-container overflow-hidden">
+     <Card className="h-full flex flex-col w-1/4 left-pane p-2">
+      {pg && children}
+     </Card>
+     <div className="flex items-center justify-center h-full w-4 cursor-col-resize resizer">
+      <section className="flex h-6 w-3 bg-white rounded-xs py-1 px-0.5 gap-0.5">
+       <aside className="bg-slate-500 h-full grow"></aside>
+       <aside className="bg-slate-500 h-full grow"></aside>
+       <aside className="bg-slate-500 h-full grow"></aside>
+      </section>
+     </div>
+     <Card className="h-full flex flex-col flex-1">
+      <div className="flex justify-between items-center px-4 py-2 border-b bg-muted/50">
+       <Tabs
+        className="w-full"
+       >
+        <div className="flex justify-between items-center w-full">
+         <TabsList>
+          {(new Array(vms)).fill(1).map((_, i) => (
+           <button
+            key={i}
+            onClick={() => setTerminal(i)}
+            data-state={(terminal === i) ? "active" : ""}
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow">
+            <Server className="h-4 w-4 mr-1" /> VM0{i + 1}
+           </button>
+          ))}
+         </TabsList>
+         <div className="flex justify-between items-center gap-2">
+          <div className="inline-flex h-9 items-center justify-center rounded-lg bg-muted pe-4 text-muted-foreground">
+           <select
+            onChange={fontSelectHandler}
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-md ps-4 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow"
+            name="select-font"
+            id="select-font"
+            defaultValue={font.font}
+           >
+            {fonts.map((e, i) => (
+             <option
+              className="bg-background"
+              key={i}
+              value={e.font}
+             >
+              {e.name}
+             </option>
+            ))}
+           </select>
+          </div>
+          <ExposePort vmID={`vm${terminal + 1}`} />
+         </div>
+        </div>
+       </Tabs>
+      </div>
+      {pg ? (timeRemaining > 0 ? <div className="flex-1">
+       <Tabs className="h-full relative">
+        {/* VM01 Terminal */}
+        {(new Array(vms).fill(1).map((_, i) => (
+         <section
+          key={i}
+          className="w-full h-full m-0 p-2 absolute bg-black"
+          style={{ zIndex: (terminal === i) ? 1 : -1 }}
+         >
+          <TerminalComponent
+           updateStatus={updateStatus.current}
+           vmid={`vm${i + 1}`}
+           pg={id!}
+           font={font}
+          />
+         </section>
+        )))}
+       </Tabs>
+      </div> : <main className="w-full h-full flex items-center justify-center">
+       <h1 className="text-2xl font-bold text-white">Session terminated</h1>
+      </main>) : (msg ? <main className="w-full h-full flex items-center justify-center">
+       <h1 className="text-2xl font-bold text-white">{msg}</h1>
+      </main> : <Loading />)}
+     </Card>
+    </div>
+   </main>
+  </PlaygroundContext.Provider>
  )
 }
 

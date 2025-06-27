@@ -123,7 +123,7 @@ export async function verifyToken(id: string) {
   });
   return {
    msg: res.data.msg,
-   isVerified: false
+   isVerified: true
   };
  } catch (error) {
   console.log(error);

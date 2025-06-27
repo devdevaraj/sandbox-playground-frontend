@@ -12,7 +12,7 @@ export async function getUser(req, res) {
   const token = req.headers.authorization.split(" ")[1];
   const user = jwt.verify(token, process.env.JWT_SECRET);
   const details = userdb.read(user.id);
-  const isVerified = Boolean(await checkToken(details._id));
+  const isVerified = Boolean(await checkToken(details?._id));
   res.status(200).json({ msg: "Verified", user: { ...details, isVerified } })
  } catch (error) {
   console.log(error);

@@ -15,6 +15,31 @@ html,body {
   src: url("/fonts/hack/HackNerdFontMono-Regular.ttf");
 }
 
+@font-face {
+  font-family: "Caskaydia Cove NerdFont Propo";
+  src: url("/fonts/CaskaydiaCoveNerdFontPropo/CaskaydiaCoveNerdFontPropo-Regular.ttf");
+}
+
+@font-face {
+  font-family: "Fira Code";
+  src: url("/fonts/FiraCode/FiraCode-Regular.ttf");
+}
+
+@font-face {
+  font-family: "Iosevka Term Slab Nerd FontMono";
+  src: url("/fonts/IosevkaTermSlabNerdFontMono/IosevkaTermSlabNerdFontMono-Regular.ttf");
+}
+
+@font-face {
+  font-family: "JetBrains MonoNL";
+  src: url("/fonts/JetBrainsMonoNL/JetBrainsMonoNL-Regular.ttf");
+}
+
+@font-face {
+  font-family: "MesloLGM NerdFont";
+  src: url("/fonts/MesloLGMNerdFont/MesloLGMNerdFont-Regular.ttf");
+}
+
 /* * {
  @apply box-border;
  @apply m-0 p-0;

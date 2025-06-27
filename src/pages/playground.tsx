@@ -1,6 +1,6 @@
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Server, Clock, Power } from "lucide-react";
-import { memo, useEffect, useRef, useState } from "react";
+import { ChangeEvent, memo, useEffect, useRef, useState } from "react";
 import { createPG, pollPG, removePG } from "../utils/api-client";
 import TerminalComponent from "../components/terminal"
 import formatTime from "../utils/format-time";
@@ -11,6 +11,9 @@ import { Badge } from "../ui/badge";
 import { Card } from "../ui/card";
 import Sessions from "../components/sessions/sessions";
 import ExposePort from "../components/expose-port";
+import fonts from "../data/fonts.data";
+import FontType from "../types/font";
+import LocalStore from "../utils/local-store";
 
 function Playground() {
  const navigate = useNavigate();
@@ -19,6 +22,8 @@ function Playground() {
  const [running, setRunning] = useState<boolean>(true);
  const [terminal, setTerminal] = useState<number>(0);
  const [pg, setPG] = useState(false);
+ const delfaultFont = fonts[LocalStore.get("font") ?? 0];
+ const [font, setFont] = useState<FontType>(delfaultFont);
  const [msg, setMsg] = useState("");
  const [query] = useSearchParams();
  const { id } = useParams();
@@ -47,6 +52,12 @@ function Playground() {
   }
  }
 
+ const fontSelectHandler = (e: ChangeEvent<HTMLSelectElement>) => {
+  const selectedFontIndex = fonts.findIndex(f => f.font === e.target.value) ?? 0;
+  LocalStore.set("font", selectedFontIndex);
+  setFont(fonts[selectedFontIndex]);
+ }
+
  useEffect(() => {
   const interval = setInterval(() => {
    pollPG(id!);
@@ -64,7 +75,6 @@ function Playground() {
 
  useEffect(() => {
   let interval: number | undefined;
-
   if (running && timeRemaining > 0) {
    // setTimerActive(true);
    interval = window.setInterval(() => {
@@ -213,7 +223,19 @@ function Playground() {
           </button>
          ))}
         </TabsList>
-        <div className="flex gap-2">
+        <div className="flex justify-between items-center gap-2">
+         <select
+          onChange={fontSelectHandler}
+          className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow"
+          name="select-font"
+          id="select-font"
+          defaultValue={font.font}
+         >
+          {fonts.map((e, i) => (
+           <option key={i} value={e.font}>{e.name}</option>
+          ))}
+         </select>
+         <h4>Expose port: </h4>
          <ExposePort vmID={`vm${terminal + 1}`} />
         </div>
        </div>
@@ -228,17 +250,14 @@ function Playground() {
          className="w-full h-full m-0 p-2 absolute bg-black"
          style={{ zIndex: (terminal === i) ? 1 : -1 }}
         >
-         <TerminalComponent updateStatus={updateStatus.current} vmid={`vm${i + 1}`} pg={id!} />
+         <TerminalComponent
+          updateStatus={updateStatus.current}
+          vmid={`vm${i + 1}`}
+          pg={id!}
+          font={font}
+         />
         </section>
        )))}
-
-       {/* VM02 Terminal */}
-       {/* <section
-        className="w-full h-full m-0 p-2 absolute bg-black"
-        style={{ zIndex: terminal ? 1 : -1 }}
-       >
-        <TerminalComponent vmid={"vm2"} pg={id!} />
-       </section> */}
       </Tabs>
      </div> : <main className="w-full h-full flex items-center justify-center">
       <h1 className="text-2xl font-bold text-white">Session terminated</h1>

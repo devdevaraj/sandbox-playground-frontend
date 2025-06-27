@@ -22,7 +22,7 @@ export const templates: TemplateType[] = [
   playground: "ubuntu2404n2-docker",
   pgname: "4vmpg",
   numofvms: 2,
-  description: "A comprehensive playground with 4 ubuntu 24.04 virtual machines with docker",
+  description: "A playground featuring 2 virtual machines pre-installed with Docker.",
   image:
   "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80",
   tags: ["Ubuntu", "Docker", "VMs"],

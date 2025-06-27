@@ -36,12 +36,17 @@ function ExposePort({ vmID }: { vmID: string }) {
 
  return (
   <>
-   <button
-    className="text-2xl"
+   <div
     onClick={() => setPopup(!popup)}
+    className="inline-flex h-9 items-center justify-center rounded-lg bg-muted py-1 px-4 text-muted-foreground"
    >
-    ⌘
-   </button>
+    <h4>Expose: </h4>
+    <button
+     className="text-2xl"
+    >
+     ⌘
+    </button>
+   </div>
    {popup && <main className="fixed inset-0 z-30 bg-[#2226] flex items-center justify-center">
     <section className="max-w-full min-w-[40rem] bg-blue-950 rounded-lg relative shadow-2xl p-4">
      <aside onClick={() => setPopup(!popup)} className="absolute top-2 right-4 text-2xl">

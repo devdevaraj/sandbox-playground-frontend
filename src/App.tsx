@@ -14,9 +14,9 @@ import Auth from "./middlewares/auth";
 import Login from "./pages/login";
 import Admin from "./pages/admin";
 import Home from "./pages/home";
-import './App.css';
 import PlaygroundWrapper from "./components/wrappers/playground-wrapper";
 import Sessions from "./components/sessions/sessions";
+import './App.css';
 
 export const origin = import.meta.env.DEV ? "http://localhost:3000" : location.origin;
 // export const origin = false ? "http://localhost:3000" : location.origin;

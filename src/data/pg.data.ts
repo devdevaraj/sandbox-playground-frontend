@@ -3,11 +3,26 @@ import TemplateType from "../types/pg";
 export const templates: TemplateType[] = [
  {
   id: "1",
+  name: "VM playground",
+  pgname: "1vmpg",
+  playground: "ubuntu2404n1",
+  numofvms: 1,
+  description: "A comprehensive playground with a ubuntu 24.04 virtual machine",
+  image: "/img/2vm-pg-img.jpg",
+  tags: ["Ubuntu", "Networking", "VMs"],
+  resources: {
+   cpu: "2 cores",
+   memory: "4 GB",
+   storage: "10 GB",
+  },
+ },
+  {
+  id: "2",
   name: "2 VM playground",
   pgname: "2vmpg",
   playground: "ubuntu2404n2",
   numofvms: 2,
-  description: "A comprehensive playground with 2 ubuntu 24.04 virtual machines",
+  description: "A comprehensive playground with 2 ubuntu 24.04 virtual machine",
   image: "/img/2vm-pg-img.jpg",
   tags: ["Ubuntu", "Networking", "VMs"],
   resources: {
@@ -17,12 +32,12 @@ export const templates: TemplateType[] = [
   },
  },
  {
-  id: "2",
+  id: "3",
   name: "Docker playground",
-  playground: "ubuntu2404n2-docker",
-  pgname: "4vmpg",
-  numofvms: 2,
-  description: "A playground featuring 2 virtual machines pre-installed with Docker.",
+  playground: "ubuntu2404n1-docker",
+  pgname: "dockerpg",
+  numofvms: 1,
+  description: "A playground featuring a virtual machines pre-installed with Docker.",
   image:
   "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80",
   tags: ["Ubuntu", "Docker", "VMs"],
@@ -33,15 +48,15 @@ export const templates: TemplateType[] = [
   },
  },
  {
-  id: "3",
-  name: "5 VM playground",
-  pgname: "5vmpg",
-  playground: "ubuntu2404n2-docker",
-  numofvms: 5,
-  description: "A comprehensive playground with 5 ubuntu 24.04 virtual machines",
+  id: "4",
+  name: "Ansible playground",
+  pgname: "3ansbl",
+  playground: "ubuntu2404n3-ansible",
+  numofvms: 3,
+  description: "A playground featuring 3 virtual machines pre-installed with Ansible in one of them.",
   image:
   "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&q=80",
-  tags: ["Docker", "Kubernets", "linux"],
+  tags: ["Ubuntu", "Ansible", "linux"],
   resources: {
    cpu: "4 cores",
    memory: "8 GB",
@@ -49,7 +64,7 @@ export const templates: TemplateType[] = [
   },
  },
  {
-  id: "4",
+  id: "5",
   name: "2 VM playground",
   pgname: "2almavms",
   playground: "ubuntu2404n2-docker",

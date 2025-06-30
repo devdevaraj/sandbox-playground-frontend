@@ -69,7 +69,8 @@ function Playground({ children }: { children: ReactNode }) {
  useEffect(() => {
   if (!(lock)) {
    lock++;
-   updateStatus.current = inactivityTime(remove);
+   console.log(inactivityTime);
+   // updateStatus.current = inactivityTime(remove);
    create();
   }
  }, []);
@@ -294,12 +295,12 @@ function inactivityTime(remove: () => Promise<void>) {
   }, maxInactivity);
  }
 
- window.onload = resetTimer;
- document.onmousemove = resetTimer;
- document.onkeydown = resetTimer;
- document.onscroll = resetTimer;
- document.onclick = resetTimer;
- document.ontouchstart = resetTimer;
+ // window.onload = resetTimer;
+ // document.onmousemove = resetTimer;
+ // document.onkeydown = resetTimer;
+ // document.onscroll = resetTimer;
+ // document.onclick = resetTimer;
+ // document.ontouchstart = resetTimer;
 
  return resetTimer;
 };

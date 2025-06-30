@@ -17,6 +17,7 @@ import Home from "./pages/home";
 import PlaygroundWrapper from "./components/wrappers/playground-wrapper";
 import Sessions from "./components/sessions/sessions";
 import './App.css';
+import AdminNavigator from "./components/admin-navigator";
 
 export const origin = import.meta.env.DEV ? "http://localhost:3000" : location.origin;
 // export const origin = false ? "http://localhost:3000" : location.origin;
@@ -50,7 +51,7 @@ function App() {
        </Route>
 
       </Route>
-      <Route path="/admin">
+      <Route path="/admin" element={<AdminNavigator />}>
        <Route path="login" element={<AdminLogin />} />
        <Route element={<AdminAuth />}>
         <Route path="dashboard" element={<Admin />} />

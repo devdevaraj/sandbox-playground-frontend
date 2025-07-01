@@ -13,6 +13,7 @@ import ExposePort from "../components/expose-port";
 import fonts from "../data/fonts.data";
 import FontType from "../types/font";
 import LocalStore from "../utils/local-store";
+import popupCenter from "../utils/popup-center";
 
 export const PlaygroundContext = createContext<number>(null!);
 
@@ -227,6 +228,12 @@ function Playground({ children }: { children: ReactNode }) {
           ))}
          </TabsList>
          <div className="flex justify-between items-center gap-2">
+          <div className="inline-flex h-9 items-center justify-center rounded-lg bg-muted px-4 text-muted-foreground">
+           <button
+            onClick={() => popupCenter(`/terminal/vm${terminal + 1}/${id}`, `Terminal vm${terminal + 1}`, () => null)}>
+            ⇲
+           </button>
+          </div>
           <div className="inline-flex h-9 items-center justify-center rounded-lg bg-muted pe-4 text-muted-foreground">
            <select
             onChange={fontSelectHandler}

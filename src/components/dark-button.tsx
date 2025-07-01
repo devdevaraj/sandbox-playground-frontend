@@ -27,7 +27,7 @@ export default function DarkButton() {
   }
  }, [theme]);
  return (
-  <div className="fixed top-4 right-4 z-50 shadow-sm bg-background/80 backdrop-blur-sm rounded-full p-1">
+  <div id="dark-white-mode-button" className="fixed top-4 right-4 z-50 shadow-sm bg-background/80 backdrop-blur-sm rounded-full p-1">
    <Button
     variant="ghost"
     size="icon"

@@ -1,23 +1,24 @@
-import { Suspense, useState } from "react";
-import { Toaster } from "react-hot-toast";
-import { Route, Routes } from "react-router-dom";
 import axios from "axios";
+import { Toaster } from "react-hot-toast";
+import { Suspense, useState } from "react";
+import { Route, Routes } from "react-router-dom";
+import PlaygroundWrapper from "./components/wrappers/playground-wrapper";
+import AdminNavigator from "./components/admin-navigator";
 import { GlobalContext } from "./middlewares/context";
+import Sessions from "./components/sessions/sessions";
 import GitHubCallback from "./components/callback";
 import DarkButton from "./components/dark-button";
 import AdminAuth from "./middlewares/admin-auth";
 import AdminLogin from "./pages/admin-login";
+import PopupTerminal from "./pages/terminal";
 import Loading from "./components/loading";
-import Dashboard from "./pages/dashboard";
 import VerifyKey from "./pages/verify-key";
+import Dashboard from "./pages/dashboard";
 import Auth from "./middlewares/auth";
 import Login from "./pages/login";
 import Admin from "./pages/admin";
 import Home from "./pages/home";
-import PlaygroundWrapper from "./components/wrappers/playground-wrapper";
-import Sessions from "./components/sessions/sessions";
 import './App.css';
-import AdminNavigator from "./components/admin-navigator";
 
 export const origin = import.meta.env.DEV ? "http://localhost:3000" : location.origin;
 // export const origin = false ? "http://localhost:3000" : location.origin;
@@ -45,6 +46,7 @@ function App() {
       <Route element={<Auth />}>
        <Route path="/verify" element={<VerifyKey />} />
        <Route path="/dashboard" element={<Dashboard />} />
+       <Route path="/terminal/:vm/:id" element={<PopupTerminal />} />
 
        <Route path="/playground/:id" element={<PlaygroundWrapper />}>
         <Route path=":session" element={<Sessions />} />

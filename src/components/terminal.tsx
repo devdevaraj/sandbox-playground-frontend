@@ -40,9 +40,6 @@ const TerminalComponent = ({
   term.current.loadAddon(fitAddon);
   fitAddon.fit();
 
-  const cols = term.current.cols;
-  const rows = term.current.rows;
-
   const wsProtocol = getWebSocketProtocol();
 
   let socket: WebSocket;
@@ -57,6 +54,11 @@ const TerminalComponent = ({
     }
    }, 4000);
 
+   socket.onopen = () => {
+    const cols = term.current.cols;
+    const rows = term.current.rows;
+    socket.send(JSON.stringify({ type: 'resize', cols, rows }));
+   }
    socket.onmessage = (event) => {
     try {
      const signal = JSON.parse(event.data);
@@ -64,7 +66,9 @@ const TerminalComponent = ({
     } catch (error) { }
     term.current.write(event.data);
     updateStatus?.();
-    socket.send(JSON.stringify({ type: 'resize', cols, rows }));
+    // const cols = term.current.cols;
+    // const rows = term.current.rows;
+    // socket.send(JSON.stringify({ type: 'resize', cols, rows }));
    };
 
    term.current.onData((data) => {
@@ -109,10 +113,10 @@ const TerminalComponent = ({
  }, []);
 
  useEffect(() => {
-  if(term.current) {
+  if (term.current) {
    term.current.options.fontFamily = `${font.font}, courier-new, courier, monospace`;
   }
- },[font]);
+ }, [font]);
 
  return <div className="terminal-container" id={vmid} ref={terminalRef} style={{ width: '100%', height: '100%' }} />;
 };

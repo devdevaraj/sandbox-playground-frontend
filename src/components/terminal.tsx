@@ -1,6 +1,7 @@
 import { memo, useEffect, useRef } from 'react';
 import { FitAddon } from "@xterm/addon-fit";
 import { Terminal } from '@xterm/xterm';
+import { nanoid } from "nanoid";
 
 import "@xterm/xterm/css/xterm.css";
 import FontType from "../types/font";
@@ -45,7 +46,15 @@ const TerminalComponent = ({
   let socket: WebSocket;
   let interval: NodeJS.Timeout;
   function connect() {
-   socket = new WebSocket(`${wsProtocol}://${origin}/${pg}/${vmid}`);
+   const sessionid = (() => {
+    const storedSession = sessionStorage.getItem("sessionid");
+    if (storedSession) return storedSession;
+    const newid = nanoid(10);
+    sessionStorage.setItem("sessionid", newid);
+    return newid;
+   })();
+   console.log(sessionid);
+   socket = new WebSocket(`${wsProtocol}://${origin}/${pg}/${vmid}/${sessionid}`);
    socketRef.current = socket;
 
    interval = setInterval(() => {

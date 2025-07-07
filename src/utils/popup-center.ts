@@ -1,4 +1,6 @@
-const popupCenter = (url: string, title: string, onclose: () => void) => {
+import Window from "../types/global";
+
+const popupCenter = (url: string, title: string, oninteract: () => void) => {
   const dualScreenLeft = window.screenLeft ?? window.screenX;
   const dualScreenTop = window.screenTop ?? window.screenY;
 
@@ -18,17 +20,20 @@ const popupCenter = (url: string, title: string, onclose: () => void) => {
   const newWindow = window.open(
     url,
     title,
-    `width=${1000 / systemZoom},height=${
-      550 / systemZoom
-    },top=${top},left=${left}`
+    `location=no,toolbar=no,menubar=no,status=no,scrollbars=yes,width=${1000 / systemZoom},height=${550 / systemZoom},top=${top},left=${left}`
   );
 
-  newWindow?.focus();
+  if (newWindow) {
+    (newWindow as unknown as Window).suku = oninteract;
+    newWindow.opener = null;
+    newWindow.sessionStorage.clear();
+    newWindow.focus();
+  }
 
   const interval = setInterval(() => {
     if (newWindow?.closed) {
       clearInterval(interval);
-      onclose();
+      // onclose();
     }
   }, 500);
 };

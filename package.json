@@ -59,6 +59,7 @@
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "",
     "morgan": "^1.10.0",
+    "nanoid": "^5.1.5",
     "nodemon": "^3.1.10",
     "react": "^19.0.0",
     "react-day-picker": "",

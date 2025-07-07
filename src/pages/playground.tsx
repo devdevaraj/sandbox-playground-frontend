@@ -61,6 +61,10 @@ function Playground({ children }: { children: ReactNode }) {
  }
 
  useEffect(() => {
+  localStorage.setItem("font", font.font);
+ }, [font]);
+
+ useEffect(() => {
   const interval = setInterval(() => {
    pollPG(id!);
   }, 2.5 * 60 * 1000);
@@ -68,12 +72,16 @@ function Playground({ children }: { children: ReactNode }) {
  }, []);
 
  useEffect(() => {
+  let RIT: () => void | undefined;
   if (!(lock)) {
    lock++;
-   console.log(inactivityTime);
-   // updateStatus.current = inactivityTime(remove);
+   // console.log(inactivityTime);
+   const { resetTimer, revokeInactivityTime } = inactivityTime(remove);
+   updateStatus.current = resetTimer;
+   RIT = revokeInactivityTime;
    create();
   }
+  return () => RIT?.();
  }, []);
 
  useEffect(() => {
@@ -228,9 +236,10 @@ function Playground({ children }: { children: ReactNode }) {
           ))}
          </TabsList>
          <div className="flex justify-between items-center gap-2">
-          <div className="inline-flex h-9 items-center justify-center rounded-lg bg-muted px-4 text-muted-foreground">
+          <div className="inline-flex h-9 items-center justify-center rounded-lg bg-muted text-muted-foreground">
            <button
-            onClick={() => popupCenter(`/terminal/vm${terminal + 1}/${id}`, `Terminal vm${terminal + 1}`, () => null)}>
+            className="h-full px-4"
+            onClick={() => popupCenter(`/terminal/vm${terminal + 1}/${id}`, `Terminal vm${terminal + 1}`, updateStatus.current)}>
             ⇲
            </button>
           </div>
@@ -291,23 +300,36 @@ function Playground({ children }: { children: ReactNode }) {
 export default memo(Playground);
 
 function inactivityTime(remove: () => Promise<void>) {
+ console.log("inactivityTime");
  let time: NodeJS.Timeout;
- const maxInactivity = 10 * 60 * 1000;
+ // let tmp = [];
+ const maxInactivity = 20 * 1000;
 
  function resetTimer() {
+  console.log("resetTimer", time);
   clearTimeout(time);
   time = setTimeout(() => {
    console.log("User is inactive");
    remove();
   }, maxInactivity);
  }
+ 
+ window.onload = resetTimer;
+ document.onmousemove = resetTimer;
+ document.onkeydown = resetTimer;
+ document.onscroll = resetTimer;
+ document.onclick = resetTimer;
+ document.ontouchstart = resetTimer;
+ 
+ const revokeInactivityTime = () => {
+  window.onload = null;
+  document.onmousemove = null;
+  document.onkeydown = null;
+  document.onscroll = null;
+  document.onclick = null;
+  document.ontouchstart = null;
+  clearTimeout(time);
+ }
 
- // window.onload = resetTimer;
- // document.onmousemove = resetTimer;
- // document.onkeydown = resetTimer;
- // document.onscroll = resetTimer;
- // document.onclick = resetTimer;
- // document.ontouchstart = resetTimer;
-
- return resetTimer;
+ return { resetTimer, revokeInactivityTime };
 };

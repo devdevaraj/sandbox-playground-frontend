@@ -300,13 +300,11 @@ function Playground({ children }: { children: ReactNode }) {
 export default memo(Playground);
 
 function inactivityTime(remove: () => Promise<void>) {
- console.log("inactivityTime");
  let time: NodeJS.Timeout;
  // let tmp = [];
- const maxInactivity = 20 * 1000;
+ const maxInactivity = 10 * 60 * 1000;
 
  function resetTimer() {
-  console.log("resetTimer", time);
   clearTimeout(time);
   time = setTimeout(() => {
    console.log("User is inactive");

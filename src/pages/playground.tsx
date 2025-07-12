@@ -119,12 +119,14 @@ function Playground({ children }: { children: ReactNode }) {
   const resizer = document.querySelector('.resizer') as HTMLDivElement;
   const leftPane = document.querySelector('.left-pane') as HTMLDivElement;
   let isDragging = false;
-  const mouseDownHandler = () => {
+  const mouseDownHandler = (e: MouseEvent) => {
    isDragging = true;
    document.body.style.cursor = 'col-resize';
+   e.preventDefault();
   }
   const mouseMoveHandler = (e: MouseEvent) => {
    if (!isDragging) return;
+   e.preventDefault();
    const container = (document.querySelector('.pg-cards-container') as HTMLDivElement);
    const containerOffsetLeft = container.offsetLeft;
    const pointerRelativeXpos = e.clientX - containerOffsetLeft;
@@ -133,7 +135,7 @@ function Playground({ children }: { children: ReactNode }) {
    const leftPaneMaxWidth = containerWidth - 100;
 
    if (pointerRelativeXpos > leftPaneMinWidth && pointerRelativeXpos < leftPaneMaxWidth) {
-    leftPane.style.width = `${pointerRelativeXpos}px`;
+    leftPane.style.width = `${pointerRelativeXpos - 25}px`;
    }
   }
   const mouseUpHandler = () => {
@@ -243,10 +245,10 @@ function Playground({ children }: { children: ReactNode }) {
             ⇲
            </button>
           </div>
-          <div className="inline-flex h-9 items-center justify-center rounded-lg bg-muted pe-4 text-muted-foreground">
+          <div className="inline-flex h-9 items-center justify-center rounded-lg bg-muted text-muted-foreground">
            <select
             onChange={fontSelectHandler}
-            className="inline-flex items-center justify-center whitespace-nowrap rounded-md ps-4 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow"
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-4 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow"
             name="select-font"
             id="select-font"
             defaultValue={font.font}
@@ -311,14 +313,14 @@ function inactivityTime(remove: () => Promise<void>) {
    remove();
   }, maxInactivity);
  }
- 
+
  window.onload = resetTimer;
  document.onmousemove = resetTimer;
  document.onkeydown = resetTimer;
  document.onscroll = resetTimer;
  document.onclick = resetTimer;
  document.ontouchstart = resetTimer;
- 
+
  const revokeInactivityTime = () => {
   window.onload = null;
   document.onmousemove = null;
